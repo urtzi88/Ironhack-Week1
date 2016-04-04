@@ -36,6 +36,7 @@ puts "Type 1 if you want it on ascending order or 2 if you want it in descending
 sort_order = gets.chomp.to_i
 
 puts "Sort by: #{sort_by} and Sorting order: #{sort_order}"
+puts"------------------------------------------------"
 
 def sort_homes(sort_by, sort_order, homes)
 	sorted_homes = []
@@ -57,11 +58,20 @@ end
 
 sort_homes(sort_by, sort_order, homes)
 
+puts"------------------------------------------------"
 puts "Please type in the city you want to filter by:"
 filter_city = gets.chomp
+puts"------------------------------------------------"
 
 filter_city_homes = homes.select{|hm| hm.city == filter_city}
 print_array(filter_city_homes)
+
+average = filter_city_homes.reduce(0.0){|sum, x| sum += x.price}
+average = average/filter_city_homes.length
+
+puts"------------------------------------------------"
+puts "Average price for #{filter_city} is $#{average}"
+puts"------------------------------------------------"
 
 
 
