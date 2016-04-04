@@ -73,8 +73,17 @@ puts"------------------------------------------------"
 puts "Average price for #{filter_city} is $#{average}"
 puts"------------------------------------------------"
 
+puts "ALL HOMES."
+puts"------------------------------------------------"
 
+print_array(homes)
 
+puts "Please type in the price that you would like to pay:"
+user_price = gets.chomp.to_i
+puts"------------------------------------------------"
 
+priced_homes = homes.select{|hm| hm.price == user_price}
+print_array(priced_homes)
+puts"------------------------------------------------"
 
 
