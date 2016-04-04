@@ -56,9 +56,12 @@ def sort_homes(sort_by, sort_order, homes)
 end
 
 sort_homes(sort_by, sort_order, homes)
-#sorted_homes = homes.sort {|a, b| a.price <=> b.price}
-#print_array(sorted_homes)
 
+puts "Please type in the city you want to filter by:"
+filter_city = gets.chomp
+
+filter_city_homes = homes.select{|hm| hm.city == filter_city}
+print_array(filter_city_homes)
 
 
 
