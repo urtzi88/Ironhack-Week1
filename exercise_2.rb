@@ -1,4 +1,5 @@
 require 'date'
+require 'colorize'
 class Blog
 	def initialize
 		@container = []
@@ -6,14 +7,40 @@ class Blog
 	def add_post(post)
 		@container << post
 	end
-	def publish_front_page
-		sorted_container = @container.sort {|a, b| b.date <=> a.date}
+	def publish_front_page(sorted_container)
 		sorted_container.each do |post|
 			puts post.title
 			puts "*********"
 			puts post.text
 			puts "------------------"
 		end	
+	end
+	def pagination
+		sorted_container = @container.sort {|a, b| b.date <=> a.date}
+		sorted_array = sorted_container.each_slice(3).to_a
+		page = 1
+		publish_front_page(sorted_array[page - 1])
+		pages = *(1..sorted_array.length)
+		while 1
+			pages.each do |x|
+				if x == page
+					print x.to_s.colorize(:blue)
+				else
+					print x
+				end
+			end
+			print "\n"
+			dir = gets.chomp
+			if dir == "next" && page < sorted_array.length
+				page += 1
+				publish_front_page(sorted_array[page - 1])
+			elsif dir == "prev" && page > 1
+				page -= 1
+				publish_front_page(sorted_array[page - 1])
+			else
+				publish_front_page(sorted_array[page - 1])
+			end
+		end
 	end
 end
 
@@ -42,4 +69,4 @@ blog.add_post Post.new("Post Title 5", Date.new(2016,04,01), "Post Text 5")
 blog.add_post Post.new("Post Title 6", Date.new(2016,03,31), "Post Text 6")
 blog.add_post Post.new("Post Title 7", Date.new(2016,03,30), "Post Text 7")
 blog.add_post Post.new("Post Title 8", Date.new(2016,03,29), "Post Text 8")
-blog.publish_front_page
+blog.pagination
