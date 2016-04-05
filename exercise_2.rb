@@ -1,3 +1,4 @@
+require 'date'
 class Blog
 	def initialize
 		@container = []
@@ -25,8 +26,20 @@ class Post
 	end
 end
 
+class Sponsored < Post
+	def initialize(title, date, text)
+		@title = "*****" + title + "*****"
+		super(@title, date, text)
+	end
+end
+
 blog = Blog.new
-blog.add_post Post.new("Post Title 1", "05/04/2016", "Post Text 1")
-blog.add_post Post.new("Post Title 2", "04/04/2016", "Post Text 2")
-blog.add_post Post.new("Post Title 3", "03/04/2016", "Post Text 3")
+blog.add_post Post.new("Post Title 1", Date.new(2016,04,05), "Post Text 1")
+blog.add_post Sponsored.new("Post Title 2", Date.new(2016,04,04), "Post Text 2")
+blog.add_post Post.new("Post Title 3", Date.new(2016,04,03), "Post Text 3")
+blog.add_post Post.new("Post Title 4", Date.new(2016,04,02), "Post Text 4")
+blog.add_post Post.new("Post Title 5", Date.new(2016,04,01), "Post Text 5")
+blog.add_post Post.new("Post Title 6", Date.new(2016,03,31), "Post Text 6")
+blog.add_post Post.new("Post Title 7", Date.new(2016,03,30), "Post Text 7")
+blog.add_post Post.new("Post Title 8", Date.new(2016,03,29), "Post Text 8")
 blog.publish_front_page
