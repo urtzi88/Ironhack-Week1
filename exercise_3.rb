@@ -9,6 +9,7 @@ class Room
   def print_room
     puts @description
     puts "There are #{@doors.length} doors on this room"
+    print "Exits: #{@doors} \n"
   end
 end
 
