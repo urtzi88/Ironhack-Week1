@@ -4,42 +4,54 @@ class Blog
 	def initialize
 		@container = []
 	end
+
 	def add_post(post)
 		@container << post
 	end
+
 	def publish_front_page(sorted_container)
+		system("clear")
 		sorted_container.each do |post|
 			puts post.title
 			puts "*********"
 			puts post.text
 			puts "------------------"
-		end	
+		end
 	end
+
 	def pagination
 		sorted_container = @container.sort {|a, b| b.date <=> a.date}
 		sorted_array = sorted_container.each_slice(3).to_a
 		page = 1
-		publish_front_page(sorted_array[page - 1])
 		pages = *(1..sorted_array.length)
 		while 1
-			pages.each do |x|
-				if x == page
-					print x.to_s.colorize(:blue)
-				else
-					print x
-				end
-			end
-			print "\n"
-			dir = gets.chomp
-			if dir == "next" && page < sorted_array.length
-				page += 1
-				publish_front_page(sorted_array[page - 1])
-			elsif dir == "prev" && page > 1
-				page -= 1
-				publish_front_page(sorted_array[page - 1])
+			publish_front_page(sorted_array[page - 1])
+			print_page(pages, page)
+			page = change_page(pages, page, sorted_array)
+		end
+	end
+
+	def print_page(pages, page)
+		pages.each do |x|
+			if x == page
+				print x.to_s.colorize(:red)
 			else
-				publish_front_page(sorted_array[page - 1])
+				print x
 			end
+		end
+		print "\n"
+	end
+	
+	def change_page(pages, page, sorted_array)
+		dir = gets.chomp.to_s
+		if dir == "next" && page < sorted_array.length
+			page += 1
+		elsif dir == "prev" && page > 1
+			page -= 1
+		elsif pages.include?(dir.to_i)
+			page = dir.to_i
+		else
+			page
 		end
 	end
 end
