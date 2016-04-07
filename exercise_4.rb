@@ -1,3 +1,4 @@
+require 'date'
 class ShoppingCart
   def initialize
     @pricelist = {}
@@ -28,10 +29,18 @@ class ShoppingCart
     puts "Total: #{total_cost}"
   end
 
-  def load_prices
+  def load_prices(date_of_today)
     priceli = File.readlines('prices')
     priceli.each do |item|
-      @pricelist[item.split(' ')[0].to_sym] = item.split(' ')[1].split('$')[0]
+      if item.split(' ')[0] == "watermelon"
+        if date_of_today.sunday
+          @pricelist[item.split(' ')[0].to_sym] = item.split(' ')[1].split('$')[0].to_i * 2
+        else
+          @pricelist[item.split(' ')[0].to_sym] = item.split(' ')[1].split('$')[0].to_i
+        end
+      else
+        @pricelist[item.split(' ')[0].to_sym] = item.split(' ')[date_of_today.season].split('$')[0]
+      end
     end
   end
 
@@ -62,8 +71,30 @@ class ShoppingCart
   end
 end
 
+class Season
+  def initialize
+    @today_date = Date.today
+  end
+  def season
+    year_day = @today_date.yday().to_i
+    if year_day >= 355 or year_day < 81
+      4 #winter
+    elsif year_day >= 81 and year_day < 173
+      1 #spring
+    elsif year_day >= 173 and year_day < 266
+      2 #summer
+    elsif year_day >= 266 and year_day < 355
+      3 #autumn
+    end
+  end
+  def sunday
+    week_day = @today_date.wday.to_i
+    week_day == 0 ? true : false #is sunday?
+  end
+end
+
 cart = ShoppingCart.new
-cart.load_prices
+cart.load_prices(Season.new)
 
 
 cart.add_item_to_cart :apples
