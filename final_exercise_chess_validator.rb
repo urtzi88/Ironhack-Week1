@@ -1,4 +1,13 @@
+module Output
+  def write(value)
+    open('output.txt', 'a') do |f|
+      f << value
+    end
+  end
+end
+
 class Piece
+  include Output
   attr_reader :color
   def initialize(color)
     @v_diff
@@ -28,9 +37,9 @@ class Rook < Piece
   def check_move(initial_pos, end_pos)
     get_diffs(initial_pos, end_pos)
     if check_horizontal && !check_vertical || check_vertical && !check_horizontal
-      puts "LEGAL"
+      write ("LEGAL\n")
     else
-      puts "ILLEGAL"
+      write ("ILLEGAL\n")
     end
   end
 end
@@ -39,9 +48,9 @@ class Queen < Piece
   def check_move(initial_pos, end_pos)
     get_diffs(initial_pos, end_pos)
     if check_horizontal && !check_vertical || check_vertical && !check_horizontal || check_diagonal
-      puts "LEGAL"
+      write ("LEGAL\n")
     else
-      puts "ILLEGAL"
+      write ("ILLEGAL\n")
     end
   end
 end
@@ -56,15 +65,15 @@ class Pawn < Piece
     get_diffs(initial_pos, end_pos)
     if @first_move
       if check_vertical == 2 && !check_horizontal || check_vertical == - 2 && !check_horizontal || check_vertical == 1 && !check_horizontal || check_vertical == - 1 && !check_horizontal
-        puts "LEGAL"
+        write ("LEGAL\n")
       else
-        puts "ILLEGAL"
+        write ("ILLEGAL\n")
       end
     else
       if check_vertical == 1 && !check_horizontal || check_vertical == - 1 && !check_horizontal
-        puts "LEGAL"
+        write ("LEGAL\n")
       else
-        puts "ILLEGAL"
+        write ("ILLEGAL\n")
       end
     end
   end
@@ -74,9 +83,9 @@ class Bishop < Piece
   def check_move(initial_pos, end_pos)
     get_diffs(initial_pos, end_pos)
     if check_diagonal
-      puts "LEGAL"
+      write ("LEGAL\n")
     else
-      puts "ILLEGAL"
+      write ("ILLEGAL\n")
     end
   end
 end
@@ -85,9 +94,9 @@ class King < Piece
   def check_move(initial_pos, end_pos)
     get_diffs(initial_pos, end_pos)
     if check_vertical == 1 && !check_horizontal || check_vertical == - 1 && !check_horizontal || check_horizontal == 1 && !check_vertical || check_horizontal == - 1 && !check_vertical || check_diagonal == 1 || check_diagonal == - 1
-      puts "LEGAL"
+      write ("LEGAL\n")
     else
-      puts "ILLEGAL"
+      write ("ILLEGAL\n")
     end
   end
 end
@@ -97,18 +106,18 @@ class Knight < Piece
     get_diffs(initial_pos, end_pos)
     if check_horizontal == 2 || check_horizontal == - 2
       if check_vertical == 1 || check_vertical == - 1
-        puts "LEGAL"
+        write ("LEGAL\n")
       else
-        puts "ILLEGAL"
+        write ("ILLEGAL\n")
       end
     elsif check_horizontal == 1 || check_horizontal == - 1
       if check_vertical == 2 || check_vertical == - 2
-        puts "LEGAL"
+        write ("LEGAL\n")
       else
-        puts "ILLEGAL"
+        write ("ILLEGAL\n")
       end
     else
-      puts "ILLEGAL"
+      write ("ILLEGAL\n")
     end
   end
 end
@@ -127,7 +136,6 @@ class Board
       @board[index] = line.split(" ")
     end
     convert_to_sym
-    #print "#{@board[0]}\n#{@board[1]}\n#{@board[2]}\n#{@board[3]}\n#{@board[4]}\n#{@board[5]}\n#{@board[6]}\n#{@board[7]}\n"
   end
 
   def convert_to_sym
@@ -165,6 +173,7 @@ class Board
 end
 
 class Game
+  include Output
   def initialize
     @movements = []
   end
@@ -190,13 +199,13 @@ class Game
         else
           #puts "There's a piece on the destination"
           if piece1.color == piece2.color
-            puts "ILLEGAL"
+            write ("ILLEGAL\n")
           else
-            puts "LEGAL"
+            write ("LEGAL\n")
           end
         end
       else
-        puts "ILLEGAL"
+        write ("ILLEGAL\n")
       end
     end
   end
@@ -245,6 +254,8 @@ class Game
     end
   end
 end
+
+File.truncate('output.txt', 0)
 
 board1 = Board.new
 board1.load_board
